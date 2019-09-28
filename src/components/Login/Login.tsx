@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,26 +12,27 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import './Login.scss';
 
-function Copyright() {
+interface copyright {
+  year:number,
+  title:string
+}
+
+function Copyright({year, title}:copyright) {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        {title}
       </Link>{' '}
-      {new Date().getFullYear()}
+      {year}
       {'.'}
     </Typography>
   );
 }
 
 const useStyles:any = makeStyles(theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -49,13 +50,32 @@ const useStyles:any = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  button: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+    maring : '0px auto'
+  },
 }));
 
 export default function LogIn() {
   const classes = useStyles();
+  const [user, setuser] = useState({username:"alam", password:""});
+  const [isremember, setisremember] = useState(false);
+
+  //Equvalent to Componenet did mount
+  useEffect(()=>{
+
+  })
+
 
   return (
     <Container component="main" maxWidth="xs">
+    
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -74,7 +94,13 @@ export default function LogIn() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            value={user.username}
             autoFocus
+            onChange={()=>{
+              const usernameInput:any = event.target;
+              let value:string = usernameInput.value;
+             setuser({username:value, password:user.password})
+            }}
           />
           <TextField
             variant="outlined"
@@ -84,11 +110,18 @@ export default function LogIn() {
             name="password"
             label="Password"
             type="password"
-            id="password"
+            id="password"            
             autoComplete="current-password"
+            onChange={()=>{
+              const passwordInput:any = event.target;
+              let value:string = passwordInput.value
+              setuser({username:user.username, password:value})
+            }}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox value="remember" checked={isremember} color="primary" onChange={()=>{
+              setisremember(!isremember)
+            }} />}
             label="Remember me"
           />
           <Button
@@ -97,6 +130,10 @@ export default function LogIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={()=>{
+              event.preventDefault();
+              console.log(user, isremember)
+            }}
           >
             Sign In
           </Button>
@@ -107,7 +144,7 @@ export default function LogIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="#/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -115,7 +152,7 @@ export default function LogIn() {
         </form>
       </div>
       <Box mt={8}>
-        <Copyright />
+        <Copyright year="2021" title="Create by #Mohammad."/>
       </Box>
     </Container>
   );
